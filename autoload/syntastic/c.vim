@@ -52,20 +52,10 @@ function! syntastic#c#ReadConfig(file) abort " {{{2
 
     let parameters = []
     for line in lines
-        let matches = matchstr(line, '\m\C^\s*-I\s*\zs.\+')
-        if matches !=# ''
-            " this one looks like an absolute path
-            if match(matches, '\m^\%(/\|\a:\)') != -1
-                call add(parameters, '-I' . matches)
-            else
-                call add(parameters, '-I' . filepath . syntastic#util#Slash() . matches)
-            endif
-        else
-            call add(parameters, line)
-        endif
+        call add(parameters, line)
     endfor
 
-    return join(map(parameters, 'syntastic#util#shescape(v:val)'))
+    return join(map(parameters, 'syntastic#util#shexpand(v:val)'))
 endfunction " }}}2
 
 " GetLocList() for C-like compilers
